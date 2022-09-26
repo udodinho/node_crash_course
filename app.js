@@ -18,21 +18,25 @@ app.set("view engine", "ejs")
 app.use(express.static("public"))
 app.use(morgan("dev"))
 
-
+// Routes
 app.get("/", (req, resp) => {
-    const blogs = [
-        {title: "Yoshi finds eggs", snippet: "Lorem ipsum dolor sit amet consectetur"},
-        {title: "Mario finds stars", snippet: "Lorem ipsum dolor sit amet consectetur"},
-        {title: "How to fight demons", snippet: "Lorem ipsum dolor sit amet consectetur"}
-    ];
-
-    resp.render("index", {title: "Home", blogs});
+    resp.redirect("/blogs");
 });
-
 
 app.get("/about", (req, resp) => {
     resp.render("about", {title: "About"});
 });
+
+// Blog routes
+app.get("/blogs", (req, resp) => {
+    Blog.find().sort({ createdAt: -1 })
+    .then((result) => {
+        resp.render("index", {title: "All blogs", blogs: result });
+    })
+    .catch((err) => {
+        console.log(err)
+    })
+})
 
 app.get("/blogs/create", (req, resp) => {
     resp.render("create", {title: "Create a new blog"});
