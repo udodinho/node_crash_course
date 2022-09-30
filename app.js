@@ -48,6 +48,19 @@ app.get("/blogs/:id", (req, resp) => {
     })
 })
 
+app.delete("/blogs/:id", (req, resp) => {
+    const id = req.params.id;
+
+    Blog.findByIdAndDelete(id)
+    .then(result => {
+        resp.json({ redirect: "/blogs" });
+        console.log(result)
+    })
+    .catch(err => {
+        console.log(err);
+    })
+})
+
 app.get("/about", (req, resp) => {
     resp.render("about", {title: "About"});
 });
